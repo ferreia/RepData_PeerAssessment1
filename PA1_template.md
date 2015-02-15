@@ -5,7 +5,8 @@ output:
     keep_md: true
 ---
 ## Utility functions
-```{r results='hide'}
+
+```r
   formatNumber <- function(num, decimals=1) formatC(num, format='f', digits=decimals)
   prettyMean <- function(v) formatNumber(mean(v),1)
   prettyMedian <- function(v) formatNumber(median(v),1)
@@ -28,7 +29,8 @@ The data was first loaded into the dataframe *activity* from the csv file, activ
 * The *date* column was converted from *character* to *Date*
 * A new factor variable *weekday* representing the day of week was added to the *activity* dataframe
 
-```{r}
+
+```r
   # Loading the data into a dataframe called activity
   activity <- read.csv("data/activity.csv")
   
@@ -42,22 +44,36 @@ The data was first loaded into the dataframe *activity* from the csv file, activ
   head(activity)
 ```
 
-The dataset was found to contain `r nrow(activity)` observations.
+```
+##   steps       date interval weekday
+## 1    NA 2012-10-01        0  Monday
+## 2    NA 2012-10-01        5  Monday
+## 3    NA 2012-10-01       10  Monday
+## 4    NA 2012-10-01       15  Monday
+## 5    NA 2012-10-01       20  Monday
+## 6    NA 2012-10-01       25  Monday
+```
+
+The dataset was found to contain 17568 observations.
 
 ## Total number of steps taken per day
 Below we calculate the total number of steps taken by day and display a histogram of the total number of steps per day.
-```{r }
+
+```r
   #aggregate the steps by day and store result in a dataframe
   steps.per.day <- aggregate(steps ~ date, activity, FUN=sum)
   # Histogram of total steps per day
   hist(steps.per.day$steps, main="Histogram of total steps per day", xlab='Number of steps', col='lightblue')
 ```
 
-The mean number of steps per day is `r prettyMean(steps.per.day$steps)` and the median is `r prettyMedian(steps.per.day$steps)`.
+![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-1.png) 
+
+The mean number of steps per day is 10766.2 and the median is 10765.0.
 
 
 ## Average daily activity pattern
-```{r}
+
+```r
   # calculate the average number of steps per interval for all days
   intmean <- aggregate(steps ~ interval, activity, FUN=mean)
 
@@ -79,17 +95,20 @@ The mean number of steps per day is `r prettyMean(steps.per.day$steps)` and the 
        paste("max interval:",largest.avg.steps.interval), cex=0.6, pos=4, col="red")
 ```
 
-The interval with the largest average number of steps is `r largest.avg.steps.interval` which has an average of `r formatNumber(largest.avg.steps)` steps.
+![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4-1.png) 
+
+The interval with the largest average number of steps is 835 which has an average of 206.2 steps.
 
 ## Inputing missing values
 
-1. There are `r sum(is.na(activity$steps))` rows with missing number of steps.
+1. There are 2304 rows with missing number of steps.
 
 2. To fill in the missing data, will create a new dataframe *mactivity* that will contain the mean number of steps for the intervals that have missing steps data in the original dataset.
 
 3. This will be acomplished by merging the the *activity* dataframe with the *intmean* dataframe that contains the average number of steps per interval. See code below.
 
-```{r}
+
+```r
   # merge the dataframes by matching interval
   mactivity = merge(activity, intmean, by='interval')
   
@@ -103,7 +122,8 @@ The interval with the largest average number of steps is `r largest.avg.steps.in
 
 4. Histogram of the  a histogram of the total number of steps taken each day for the dataset with filled in steps for all days.
 
-```{r }
+
+```r
   #aggregate the steps by day and store result in a dataframe
   msteps.per.day <- aggregate(steps ~ date, mactivity, FUN=sum)
   # Histogram of total steps per day
@@ -111,19 +131,22 @@ The interval with the largest average number of steps is `r largest.avg.steps.in
        sub="Without missing data", xlab='Number of steps', col='lightblue')
 ```
 
+![plot of chunk unnamed-chunk-6](figure/unnamed-chunk-6-1.png) 
+
 The choice of using the average of the steps per interval to input missing data has not changed the mean or median though it has increased the total number of steps. The table below shows a comparison of these sample statistics for the two data sets.
 
 statistic|Original dataset|Modified dataset
 ---------|----------------|----------------
-Mean |`r prettyMean(steps.per.day$steps)`|`r prettyMean(msteps.per.day$steps)`
-Median|`r prettyMedian(steps.per.day$steps)`|`r prettyMedian(msteps.per.day$steps)`
-Total|`r prettySum(steps.per.day$steps)`|`r prettySum(msteps.per.day$steps)`
+Mean |10766.2|10766.2
+Median|10765.0|10766.2
+Total|570608|656738
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
 1. Adding a new factor variable in the dataset with two levels – “weekday” and “weekend” indicating whether a given date is a weekday or weekend day.
 
-```{r}
+
+```r
   # auxiliary function to calculate whether a day is a weekend
   is.weekend <- function(weekday) (weekday %in% c("Saturday", "Sunday"))
   
@@ -133,7 +156,8 @@ Total|`r prettySum(steps.per.day$steps)`|`r prettySum(msteps.per.day$steps)`
 
 2. Panel plot containing a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis). 
 
-```{r fig.align='center', fig.width=9}
+
+```r
   library(ggplot2)
 
   # helper function to aggregate by weekend/weekday
@@ -155,6 +179,8 @@ Total|`r prettySum(steps.per.day$steps)`|`r prettySum(msteps.per.day$steps)`
   p <- p + facet_grid(weekend ~ .) + geom_line(color="blue")
   p
 ```
+
+<img src="figure/unnamed-chunk-8-1.png" title="plot of chunk unnamed-chunk-8" alt="plot of chunk unnamed-chunk-8" style="display: block; margin: auto;" />
 
 
 
