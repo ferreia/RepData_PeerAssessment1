@@ -1,9 +1,4 @@
----
-title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: true
----
+# Reproducible Research: Peer Assessment 1
 ## Utility functions
 
 ```r
@@ -20,8 +15,7 @@ output:
 
 * forked the GitHub [course repository](https://github.com/rdpeng/RepData_PeerAssessment1)
 * cloned the repository onto a directory - *repodir*
-* created a directory called *data* on the top level *repodir* directory
-* unziped the file *activity.zip* and moved the unzipped file *activity.csv* to the data repository
+* unziped the file *activity.zip* which added a new file *activity.csv* to the directory *repodir*
 
 2. Data processing and transformations
 The data was first loaded into the dataframe *activity* from the csv file, activity.csv in the *data* directory and the following transaformations were applied:
@@ -32,7 +26,7 @@ The data was first loaded into the dataframe *activity* from the csv file, activ
 
 ```r
   # Loading the data into a dataframe called activity
-  activity <- read.csv("data/activity.csv")
+  activity <- read.csv("activity.csv")
   
   # Convert the date column to Date class
   activity$date <- as.Date(strptime(activity$date, "%F"))
@@ -63,10 +57,11 @@ Below we calculate the total number of steps taken by day and display a histogra
   #aggregate the steps by day and store result in a dataframe
   steps.per.day <- aggregate(steps ~ date, activity, FUN=sum)
   # Histogram of total steps per day
-  hist(steps.per.day$steps, main="Histogram of total steps per day", xlab='Number of steps', col='lightblue')
+  hist(steps.per.day$steps, main="Histogram of total steps per day", xlab='Number of steps', col='lightblue',
+       breaks=12)
 ```
 
-![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-1.png) 
+![](PA1_template_files/figure-html/unnamed-chunk-3-1.png) 
 
 The mean number of steps per day is 10766.2 and the median is 10765.0.
 
@@ -95,7 +90,7 @@ The mean number of steps per day is 10766.2 and the median is 10765.0.
        paste("max interval:",largest.avg.steps.interval), cex=0.6, pos=4, col="red")
 ```
 
-![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4-1.png) 
+![](PA1_template_files/figure-html/unnamed-chunk-4-1.png) 
 
 The interval with the largest average number of steps is 835 which has an average of 206.2 steps.
 
@@ -128,10 +123,10 @@ The interval with the largest average number of steps is 835 which has an averag
   msteps.per.day <- aggregate(steps ~ date, mactivity, FUN=sum)
   # Histogram of total steps per day
   hist(msteps.per.day$steps, main="Histogram of total steps per day", 
-       sub="Without missing data", xlab='Number of steps', col='lightblue')
+       sub="Without missing data", xlab='Number of steps', col='lightblue', breaks=12)
 ```
 
-![plot of chunk unnamed-chunk-6](figure/unnamed-chunk-6-1.png) 
+![](PA1_template_files/figure-html/unnamed-chunk-6-1.png) 
 
 The choice of using the average of the steps per interval to input missing data has not changed the mean or median though it has increased the total number of steps. The table below shows a comparison of these sample statistics for the two data sets.
 
@@ -180,7 +175,7 @@ Total|570608|656738
   p
 ```
 
-<img src="figure/unnamed-chunk-8-1.png" title="plot of chunk unnamed-chunk-8" alt="plot of chunk unnamed-chunk-8" style="display: block; margin: auto;" />
+<img src="PA1_template_files/figure-html/unnamed-chunk-8-1.png" title="" alt="" style="display: block; margin: auto;" />
 
 
 

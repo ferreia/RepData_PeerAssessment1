@@ -19,8 +19,7 @@ output:
 
 * forked the GitHub [course repository](https://github.com/rdpeng/RepData_PeerAssessment1)
 * cloned the repository onto a directory - *repodir*
-* created a directory called *data* on the top level *repodir* directory
-* unziped the file *activity.zip* and moved the unzipped file *activity.csv* to the data repository
+* unziped the file *activity.zip* which added a new file *activity.csv* to the directory *repodir*
 
 2. Data processing and transformations
 The data was first loaded into the dataframe *activity* from the csv file, activity.csv in the *data* directory and the following transaformations were applied:
@@ -30,7 +29,7 @@ The data was first loaded into the dataframe *activity* from the csv file, activ
 
 ```{r}
   # Loading the data into a dataframe called activity
-  activity <- read.csv("data/activity.csv")
+  activity <- read.csv("activity.csv")
   
   # Convert the date column to Date class
   activity$date <- as.Date(strptime(activity$date, "%F"))
@@ -50,7 +49,8 @@ Below we calculate the total number of steps taken by day and display a histogra
   #aggregate the steps by day and store result in a dataframe
   steps.per.day <- aggregate(steps ~ date, activity, FUN=sum)
   # Histogram of total steps per day
-  hist(steps.per.day$steps, main="Histogram of total steps per day", xlab='Number of steps', col='lightblue')
+  hist(steps.per.day$steps, main="Histogram of total steps per day", xlab='Number of steps', col='lightblue',
+       breaks=12)
 ```
 
 The mean number of steps per day is `r prettyMean(steps.per.day$steps)` and the median is `r prettyMedian(steps.per.day$steps)`.
@@ -108,7 +108,7 @@ The interval with the largest average number of steps is `r largest.avg.steps.in
   msteps.per.day <- aggregate(steps ~ date, mactivity, FUN=sum)
   # Histogram of total steps per day
   hist(msteps.per.day$steps, main="Histogram of total steps per day", 
-       sub="Without missing data", xlab='Number of steps', col='lightblue')
+       sub="Without missing data", xlab='Number of steps', col='lightblue', breaks=12)
 ```
 
 The choice of using the average of the steps per interval to input missing data has not changed the mean or median though it has increased the total number of steps. The table below shows a comparison of these sample statistics for the two data sets.
